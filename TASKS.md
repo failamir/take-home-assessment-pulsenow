@@ -2,7 +2,7 @@
 
 ## Overview
 
-Complete the following 3 tasks to demonstrate your blockchain and Web3 development skills. Each task should take approximately 15-20 minutes, with a total time of 40-60 minutes.
+Complete the following 3 tasks to demonstrate your blockchain and Web3 development skills.
 
 ---
 
