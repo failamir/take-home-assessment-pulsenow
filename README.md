@@ -10,8 +10,6 @@ Our mission is to build an open, trust-minimized financial intelligence layer fo
 
 This assessment is designed to evaluate your skills in blockchain development, Web3 integration, and building production-ready systems that bridge traditional backend services with decentralized infrastructure. You'll be working with realistic crypto market data, implementing wallet-based authentication, and building systems for verifiable data integrity.
 
-**Estimated Time: 40-60 minutes**
-
 ## Project Structure
 
 ```
@@ -69,7 +67,6 @@ The frontend will run on `http://localhost:3000`
 You need to complete **3 tasks** that demonstrate your blockchain and Web3 development skills. Each task builds upon the previous one, creating a cohesive crypto intelligence dashboard.
 
 ### Task 1: Smart Contract Integration & Signal Verification
-**Estimated Time: 15-20 minutes**
 
 Implement a system to verify crypto trading signals using on-chain data. You need to:
 - Connect to an Ethereum-compatible network (use Sepolia testnet or local Hardhat node)
@@ -83,7 +80,6 @@ Implement a system to verify crypto trading signals using on-chain data. You nee
 - Display verification status for signals in the dashboard
 
 ### Task 2: Wallet-Based Authentication & Access Control
-**Estimated Time: 15-20 minutes**
 
 Implement secure wallet-based authentication for accessing premium signals:
 - Integrate Web3 wallet connection (MetaMask/WalletConnect)
@@ -99,7 +95,6 @@ Implement secure wallet-based authentication for accessing premium signals:
 - User profile showing wallet address and access level
 
 ### Task 3: On-Chain Analytics Dashboard & Data Integrity
-**Estimated Time: 10-20 minutes**
 
 Build an analytics dashboard that displays verified on-chain metrics:
 - Create a component that displays blockchain data (transactions, gas costs, addresses)
