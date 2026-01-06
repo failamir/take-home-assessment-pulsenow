@@ -12,9 +12,19 @@ const authenticatedSessions = new Map();
  */
 const requireAuth = (req, res, next) => {
   const sessionToken = req.headers.authorization?.replace('Bearer ', '');
-  
-  // TODO: Verify session token and attach user info to req
-  // For now, allow all requests
+
+  if (!sessionToken) {
+    return res.status(401).json({ success: false, message: 'No authentication token provided' });
+  }
+
+  const session = getSession(sessionToken);
+
+  if (!session) {
+    return res.status(401).json({ success: false, message: 'Invalid or expired session' });
+  }
+
+  // Attach user info to request
+  req.user = session;
   next();
 };
 

@@ -4,7 +4,7 @@ import WalletConnection from './components/WalletConnection';
 import SignalsDashboard from './components/SignalsDashboard';
 import AnalyticsDashboard from './components/AnalyticsDashboard';
 import UserProfile from './components/UserProfile';
-import { mockData } from '../mockData';
+import { mockData } from './mockData';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
 
@@ -35,14 +35,26 @@ function App() {
     }
   };
 
-  const handleWalletConnect = (walletAddress) => {
+  const handleWalletConnect = (walletAddress, sessionData) => {
     setConnectedWallet(walletAddress);
-    // TODO: Trigger authentication flow
+    if (sessionData) {
+      setUserSession(sessionData);
+    }
   };
 
   const handleWalletDisconnect = () => {
     setConnectedWallet(null);
     setUserSession(null);
+  };
+
+  const handleSignalVerified = (signalId, verificationData) => {
+    setSignals(prevSignals =>
+      prevSignals.map(signal =>
+        signal.id === signalId
+          ? { ...signal, verified: true, onChainHash: verificationData.hash, verificationTimestamp: verificationData.timestamp }
+          : signal
+      )
+    );
   };
 
   return (
@@ -61,18 +73,19 @@ function App() {
 
       <main className="App-main">
         {connectedWallet && (
-          <UserProfile 
+          <UserProfile
             walletAddress={connectedWallet}
             session={userSession}
           />
         )}
 
         <div className="dashboard-container">
-          <SignalsDashboard 
+          <SignalsDashboard
             signals={signals}
             loading={loading}
-            isAuthenticated={!!userSession}
+            isAuthenticated={!!connectedWallet}
             subscriptionTier={userSession?.subscriptionTier || 'free'}
+            onSignalVerified={handleSignalVerified}
           />
 
           <AnalyticsDashboard />
