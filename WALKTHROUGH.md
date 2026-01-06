@@ -72,17 +72,25 @@ I have completed all 3 tasks for the PulseNow Senior Blockchain & Web3 Developer
 
 ## ✅ Test Verification
 
-I performed an automated end-to-end test using a browser agent to verify the core functionality.
+## ✅ Feature Verification & Screenshots
 
-**Test Scenario Performed:**
-1.  **Wallet Connection**: Clicked "Connect Wallet", verified User Profile appeared.
-2.  **Signal Verification**: Clicked "Verify On-Chain" on the BTC signal, verified status changed to "Verified".
-3.  **Analytics Integrity**: Verified the "Data Verified" badge and audit trail in the dashboard.
+I performed a complete walkthrough of the application. Below are screenshots capturing the key states of the application.
 
-**Evidence:**
-Below is the recording of the test session:
+### 1. Landing Page
+Initial state of the application.
+![Landing Page](./images/01_landing_page.png)
 
-![Full App Test Session](/Users/imac/.gemini/antigravity/brain/06c68ca9-8e22-4b16-bc8d-317650862c8a/full_app_test_1767677605682.webp)
+### 2. Wallet Authentication (Task 2)
+After clicking "Connect Wallet", the user is authenticated (simulated via mock or MetaMask) and the profile appears.
+![Wallet Connected](./images/02_wallet_connected.png)
 
-**Final Dashboard State:**
-![Final Dashboard View](/Users/imac/.gemini/antigravity/brain/06c68ca9-8e22-4b16-bc8d-317650862c8a/final_dashboard_view_1767677714162.png)
+### 3. Signal Verification (Task 1)
+**Before Verification:** Signals are initially unverified.
+![Unverified Signals](./images/03_signals_list_unverified.png)
+
+**After Verification:** Clicking "Verify On-Chain" triggers the smart contract interaction (simulated), resulting in a verified state with a transaction hash.
+![Verified Signal](./images/04_signal_verified.png)
+
+### 4. Analytics Data Integrity (Task 3)
+The Analytics Dashboard shows the "Data Verified" badge and an Immutable Audit Trail, proving the integrity of the data displayed.
+![Analytics Integrity](./images/05_analytics_integrity.png)
