@@ -112,3 +112,58 @@
   color: #94a3b8;
 }
 
+/* ========================================= */
+/* LIQUID GLASS THEME OVERRIDES             */
+/* ========================================= */
+
+.liquid-glass-theme.App {
+  background: radial-gradient(circle at 50% 10%, #1a1a1a 0%, #0a0a0a 100%);
+}
+
+.liquid-glass-theme .App-header {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(40px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.liquid-glass-theme .header-content h1 {
+  background: var(--lg-primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+  text-shadow: 0 0 30px rgba(6, 182, 212, 0.2);
+}
+
+.liquid-glass-theme .tagline {
+  color: var(--lg-text-secondary);
+  letter-spacing: 1px;
+}
+
+.liquid-glass-theme .App-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--lg-text-secondary);
+}
+
+/* Button Overrides */
+.liquid-glass-theme .btn-primary {
+  background: var(--lg-primary-gradient);
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+  border: none;
+}
+
+.liquid-glass-theme .btn-primary:hover {
+  box-shadow: 0 0 25px rgba(6, 182, 212, 0.6);
+  transform: translateY(-2px);
+}
+
+.liquid-glass-theme .btn-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.liquid-glass-theme .btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}

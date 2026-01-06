@@ -4,6 +4,7 @@ import WalletConnection from './components/WalletConnection';
 import SignalsDashboard from './components/SignalsDashboard';
 import AnalyticsDashboard from './components/AnalyticsDashboard';
 import UserProfile from './components/UserProfile';
+import ThemeToggle from './components/ThemeToggle';
 import { mockData } from './mockData';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
@@ -13,6 +14,12 @@ function App() {
   const [userSession, setUserSession] = useState(null);
   const [signals, setSignals] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isLiquidGlass, setIsLiquidGlass] = useState(false);
+
+  const toggleTheme = () => {
+    setIsLiquidGlass(!isLiquidGlass);
+    // Persist choice if needed, or just state for now is fine
+  };
 
   useEffect(() => {
     // Load initial data
@@ -58,18 +65,22 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div className={`App ${isLiquidGlass ? 'liquid-glass-theme' : ''}`}>
       <header className="App-header">
         <div className="header-content">
           <h1>PulseNow</h1>
           <p className="tagline">AI-Powered Crypto Intelligence Platform</p>
         </div>
-        <WalletConnection
-          connectedWallet={connectedWallet}
-          onConnect={handleWalletConnect}
-          onDisconnect={handleWalletDisconnect}
-        />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <ThemeToggle isLiquidGlass={isLiquidGlass} toggleTheme={toggleTheme} />
+          <WalletConnection
+            connectedWallet={connectedWallet}
+            onConnect={handleWalletConnect}
+            onDisconnect={handleWalletDisconnect}
+          />
+        </div>
       </header>
+
 
       <main className="App-main">
         {connectedWallet && (
