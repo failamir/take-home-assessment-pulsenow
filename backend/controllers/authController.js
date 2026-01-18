@@ -3,11 +3,10 @@
  * Handles wallet signature verification and authentication
  */
 
-const { ethers } = require('ethers');
+const { getSession, setSession } = require('../middleware/authMiddleware');
 const crypto = require('crypto');
-
-// In-memory session storage (in production, use Redis or database)
-const sessions = new Map();
+const { ethers } = require('ethers');
+const mockData = require('../mockData');
 
 /**
  * Verify wallet signature and create session
@@ -18,90 +17,61 @@ const verifySignature = async (req, res) => {
     const { address, message, signature } = req.body;
 
     if (!address || !message || !signature) {
-      return res.status(400).json({
-        success: false,
-        message: 'Missing required fields: address, message, signature'
-      });
+      return res.status(400).json({ success: false, message: 'Missing required fields' });
     }
 
-    // Verify signature using ethers.js
+    // 1. Recover the signer address from the signature
     const recoveredAddress = ethers.verifyMessage(message, signature);
 
-    // Check if recovered address matches provided address
+    // 2. Verify it matches the provided address
     if (recoveredAddress.toLowerCase() !== address.toLowerCase()) {
-      return res.status(401).json({
-        success: false,
-        message: 'Signature verification failed: address mismatch'
-      });
+      return res.status(401).json({ success: false, message: 'Invalid signature' });
     }
 
-    // Generate session token
-    const sessionToken = crypto.randomBytes(32).toString('hex');
+    // 3. Find user profile or create default
+    let userProfile = mockData.userProfiles.find(u => u.walletAddress.toLowerCase() === address.toLowerCase());
 
-    // Determine subscription tier (mock logic based on address)
-    // In production, this would check against a database or smart contract
-    const subscriptionTier = isPremiumAddress(address) ? 'premium' : 'free';
+    // Default profile if not found in mock data
+    if (!userProfile) {
+      userProfile = {
+        walletAddress: address,
+        subscriptionTier: 'free',
+        subscriptionExpiry: null,
+        joinedDate: new Date().toISOString(),
+        signalsAccessed: 0,
+        apiCallsThisMonth: 0,
+        favoriteTokens: []
+      };
+    }
 
-    // Create user session
-    const userSession = {
-      address: address.toLowerCase(),
-      sessionToken,
-      subscriptionTier,
-      createdAt: Date.now(),
-      signalsAccessed: 0,
-      apiCalls: 0
-    };
+    // 4. Create a session token (mock logic)
+    const token = crypto.randomUUID();
 
+    // In a real app, we would store this token in a DB/Redis
     // Store session
-    sessions.set(sessionToken, userSession);
+    setSession(token, {
+      address,
+      tier: userProfile.subscriptionTier,
+      walletAddress: userProfile.walletAddress
+    });
 
-    // Return session data
+    // 5. Return session info
     res.json({
       success: true,
       data: {
-        sessionToken,
-        address: address.toLowerCase(),
-        subscriptionTier,
-        signalsAccessed: 0,
-        apiCalls: 0
+        token,
+        user: userProfile,
+        subscriptionTier: userProfile.subscriptionTier
       }
     });
 
   } catch (error) {
-    console.error('Auth error:', error);
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
+    console.error('Auth Error:', error);
+    res.status(500).json({ success: false, error: error.message });
   }
 };
 
-/**
- * Mock function to determine if address has premium subscription
- * In production, check smart contract or database
- */
-function isPremiumAddress(address) {
-  // For testing: addresses ending in even numbers are premium
-  const lastChar = address.slice(-1).toLowerCase();
-  return ['0', '2', '4', '6', '8', 'a', 'c', 'e'].includes(lastChar);
-}
-
-/**
- * Get session by token
- */
-function getSession(token) {
-  return sessions.get(token);
-}
-
-/**
- * Delete session
- */
-function deleteSession(token) {
-  sessions.delete(token);
-}
-
 module.exports = {
-  verifySignature,
-  getSession,
-  deleteSession
+  verifySignature
 };
+
