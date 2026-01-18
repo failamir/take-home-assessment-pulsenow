@@ -1,42 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './UserProfile.css';
 
 const UserProfile = ({ walletAddress, session }) => {
-  const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (walletAddress) {
-      loadProfile();
-    }
-  }, [walletAddress]);
-
-  const loadProfile = async () => {
-    try {
-      const response = await fetch(
-        `http://localhost:3001/api/users/${walletAddress}`,
-        {
-          headers: {
-            'Authorization': `Bearer ${session?.token || ''}`
-          }
-        }
-      );
-      const result = await response.json();
-      if (result.success) {
-        setProfile(result.data);
-      }
-    } catch (error) {
-      console.error('Error loading profile:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading) {
-    return <div className="loading">Loading profile...</div>;
-  }
-
-  if (!profile) {
+  if (!session) {
     return null;
   }
 
@@ -55,15 +21,15 @@ const UserProfile = ({ walletAddress, session }) => {
     <div className="card user-profile">
       <div className="profile-header">
         <h3>User Profile</h3>
-        <span 
+        <span
           className="subscription-badge"
-          style={{ 
-            backgroundColor: `${getTierColor(profile.subscriptionTier)}20`,
-            color: getTierColor(profile.subscriptionTier),
-            borderColor: `${getTierColor(profile.subscriptionTier)}40`
+          style={{
+            backgroundColor: `${getTierColor(session.subscriptionTier)}20`,
+            color: getTierColor(session.subscriptionTier),
+            borderColor: `${getTierColor(session.subscriptionTier)}40`
           }}
         >
-          {profile.subscriptionTier.toUpperCase()}
+          {session.subscriptionTier.toUpperCase()}
         </span>
       </div>
 
@@ -76,37 +42,23 @@ const UserProfile = ({ walletAddress, session }) => {
         <div className="profile-stats">
           <div className="stat-item">
             <span className="stat-label">Signals Accessed</span>
-            <span className="stat-value">{profile.signalsAccessed}</span>
+            <span className="stat-value">{session.signalsAccessed}</span>
           </div>
           <div className="stat-item">
-            <span className="stat-label">API Calls (This Month)</span>
-            <span className="stat-value">{profile.apiCallsThisMonth.toLocaleString()}</span>
+            <span className="stat-label">API Calls</span>
+            <span className="stat-value">{session.apiCalls}</span>
           </div>
         </div>
 
-        {profile.subscriptionExpiry && (
-          <div className="profile-item">
-            <span className="profile-label">Subscription Expires</span>
-            <span className="profile-value">
-              {new Date(profile.subscriptionExpiry).toLocaleDateString()}
-            </span>
-          </div>
-        )}
-
-        {profile.favoriteTokens && profile.favoriteTokens.length > 0 && (
-          <div className="profile-item">
-            <span className="profile-label">Favorite Tokens</span>
-            <div className="token-tags">
-              {profile.favoriteTokens.map(token => (
-                <span key={token} className="token-tag">{token}</span>
-              ))}
-            </div>
-          </div>
-        )}
+        <div className="profile-item">
+          <span className="profile-label">Session Active</span>
+          <span className="profile-value">
+            Since {new Date(session.createdAt).toLocaleTimeString()}
+          </span>
+        </div>
       </div>
     </div>
   );
 };
 
 export default UserProfile;
-

@@ -30,10 +30,18 @@ const getSignalById = (req, res) => {
 };
 
 /**
- * Get premium signals (should be protected)
+ * Get premium signals (protected route - requires premium subscription)
  * GET /api/signals/premium/list
  */
 const getPremiumSignals = (req, res) => {
+  // Check subscription tier (middleware should have attached req.user)
+  if (!req.user || req.user.subscriptionTier !== 'premium') {
+    return res.status(403).json({
+      success: false,
+      message: 'Premium subscription required to access these signals'
+    });
+  }
+
   // Premium signals are signals with confidence > 0.8
   const premiumSignals = mockData.signals.filter(s => s.confidence > 0.8);
   res.json({

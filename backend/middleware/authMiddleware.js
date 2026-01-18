@@ -3,8 +3,7 @@
  * Handles wallet-based authentication and session verification
  */
 
-// Placeholder for storing authenticated sessions
-const authenticatedSessions = new Map();
+const { getSession } = require('../controllers/authController');
 
 /**
  * Middleware to check authentication
@@ -12,38 +11,53 @@ const authenticatedSessions = new Map();
  */
 const requireAuth = (req, res, next) => {
   const sessionToken = req.headers.authorization?.replace('Bearer ', '');
-  
-  // TODO: Verify session token and attach user info to req
-  // For now, allow all requests
+
+  if (!sessionToken) {
+    return res.status(401).json({
+      success: false,
+      message: 'No authorization token provided'
+    });
+  }
+
+  // Get session from authController
+  const session = getSession(sessionToken);
+
+  if (!session) {
+    return res.status(401).json({
+      success: false,
+      message: 'Invalid or expired session'
+    });
+  }
+
+  // Attach user session to request
+  req.user = session;
+
   next();
 };
 
 /**
- * Get authenticated session by token
+ * Middleware to require premium subscription
  */
-const getSession = (token) => {
-  return authenticatedSessions.get(token);
-};
+const requirePremium = (req, res, next) => {
+  if (!req.user) {
+    return res.status(401).json({
+      success: false,
+      message: 'Authentication required'
+    });
+  }
 
-/**
- * Set authenticated session
- */
-const setSession = (token, sessionData) => {
-  authenticatedSessions.set(token, sessionData);
-};
+  if (req.user.subscriptionTier !== 'premium') {
+    return res.status(403).json({
+      success: false,
+      message: 'Premium subscription required'
+    });
+  }
 
-/**
- * Remove authenticated session
- */
-const removeSession = (token) => {
-  authenticatedSessions.delete(token);
+  next();
 };
 
 module.exports = {
   requireAuth,
-  getSession,
-  setSession,
-  removeSession,
-  authenticatedSessions
+  requirePremium
 };
 
